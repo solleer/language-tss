@@ -1,0 +1,476 @@
+'scopeName': 'source.tss'
+'name': 'TSS'
+'fileTypes': ['tss']
+
+'patterns': [
+    {
+        'include': '#comment-block'
+    }
+    {
+        'include': '#comment-line'
+    }
+    {
+        'include': '#selector'
+    }
+    {
+        'include': '#property-values'
+    }
+    {
+        'begin': '(@)import\\b'
+        'captures':
+            '0':
+                'name': 'keyword.control.at-rule.import.tss'
+            '1':
+                'name': 'punctuation.definition.keyword.tss'
+        'end': '\\s*((?=;|\\}))'
+        'name': 'meta.at-rule.import.tss'
+        'patterns': [
+              {
+                  'include': '#property-values'
+              }
+        ]
+    }
+    {
+        'begin': '(?=\\{)'
+        'end': '(?!\\G)'
+        'patterns': [
+          {
+            'include': '#rule-list'
+          }
+        ]
+    }
+]
+'repository':
+    'string-double':
+        'begin': '"'
+        'beginCaptures':
+          '0':
+            'name': 'punctuation.definition.string.begin.tss'
+        'end': '"'
+        'endCaptures':
+          '0':
+            'name': 'punctuation.definition.string.end.tss'
+        'name': 'string.quoted.double.tss'
+        'patterns': [
+          {
+            'match': '\\\\([a-fA-F0-9]{1,6}|.)'
+            'name': 'constant.character.escape.tss'
+          }
+        ]
+    'string-single':
+        'begin': '\''
+        'beginCaptures':
+          '0':
+            'name': 'punctuation.definition.string.begin.tss'
+        'end': '\''
+        'endCaptures':
+          '0':
+            'name': 'punctuation.definition.string.end.tss'
+        'name': 'string.quoted.single.tss'
+        'patterns': [
+          {
+            'match': '\\\\([a-fA-F0-9]{1,6}|.)'
+            'name': 'constant.character.escape.tss'
+          }
+        ]
+    'comment-block':
+        'begin': '/\\*'
+        'captures':
+          '0':
+            'name': 'punctuation.definition.comment.tss'
+        'end': '\\*/'
+        'name': 'comment.block.tss'
+    'comment-line':
+        'begin': '(^[ \\t]+)?(?=//)'
+        'beginCaptures':
+          '1':
+            'name': 'punctuation.whitespace.comment.leading.tss'
+        'end': '(?!\\G)'
+        'patterns': [
+          {
+            'begin': '//'
+            'beginCaptures':
+              '0':
+                'name': 'punctuation.definition.comment.tss'
+            'end': '\\n'
+            'name': 'comment.line.double-slash.tss'
+          }
+        ]
+    'selector':
+        'begin': '\\s*(?=[\\[:.*#a-zA-Z])'
+        'end': '(?=[/{])|([)])'
+        'name': 'meta.selector.tss'
+        'patterns': [
+              # Element selectors (eg: tags, class, id)
+              {
+                'match': '\\b(a|abbr|acronym|address|area|article|aside|audio|b|base|bdi|bdo|big|blockquote|body|br|button|canvas|caption|cite|code|col|colgroup|data|datalist|dd|del|details|dfn|dialog|div|dl|dt|em|embed|eventsource|fieldset|figure|figcaption|footer|form|frame|frameset|(h[1-6])|head|header|hgroup|hr|html|i|iframe|img|input|include|ins|kbd|keygen|label|legend|li|link|main|map|mark|math|menu|menuitem|meta|meter|nav|noframes|noscript|object|ol|optgroup|option|output|p|param|picture|pre|progress|q|rb|rp|rt|rtc|ruby|s|samp|script|section|select|small|source|span|strike|strong|style|sub|summary|sup|svg|table|tbody|td|template|textarea|tfoot|th|thead|time|title|tr|track|tt|u|ul|var|video|wbr)\\b'
+                'name': 'entity.name.tag.tss'
+              }
+              {
+                'captures':
+                  '1':
+                    'name': 'punctuation.definition.entity.tss'
+                'match': '(\\.)[a-zA-Z0-9_-]+'
+                'name': 'entity.other.attribute-name.class.tss'
+              }
+              {
+                'captures':
+                  '1':
+                    'name': 'punctuation.definition.entity.tss'
+                'match': '(#)[a-zA-Z][a-zA-Z0-9_-]*'
+                'name': 'entity.other.attribute-name.id.tss'
+              }
+              {
+                'match': '\\*'
+                'name': 'entity.name.tag.wildcard.tss'
+              }
+              # Pseudo
+              {
+                'captures':
+                  '1':
+                    'name': 'punctuation.definition.entity.tss'
+                'match': '(:+)(after|before)\\b'
+                'name': 'entity.other.attribute-name.pseudo-element.tss'
+              }
+              {
+                'captures':
+                  '1':
+                    'name': 'entity.other.attribute-name.pseudo-class.tss'
+                  '2':
+                    'name': 'punctuation.definition.entity.tss'
+                  '3':
+                    'name': 'punctuation.section.function.tss'
+                  '4':
+                    'name': 'constant.numeric.tss'
+                  '5':
+                    'name': 'punctuation.section.function.tss'
+                'match': '((:)nth-(?:(?:last-)?child|(?:last-)?of-type))(\\()(\\-?(?:\\d+n?|n)(?:\\+\\d+)?|even|odd)(\\))'
+              }
+              {
+                'begin': '((:)not)(\\()'
+                'beginCaptures':
+                  '1':
+                    'name': 'entity.other.attribute-name.pseudo-class.tss'
+                  '2':
+                    'name': 'punctuation.definition.entity.tss'
+                  '3':
+                    'name': 'punctuation.section.function.tss'
+                'end': '\\)'
+                'endCaptures':
+                  '0':
+                    'name': 'punctuation.section.function.tss'
+                'patterns': [
+                    {
+                        'include': '#property-values'
+                    }
+                    {
+                        'include': '#selector'
+                    }
+                ]
+              }
+              {
+                  'begin': '(:)([a-zA-Z0-9]*)(\\[)'
+                  'beginCaptures':
+                    '1':
+                      'name': 'punctuation.definition.entity.tss'
+                    '2':
+                      'name': 'entity.name.function.tss'
+                    '3':
+                      'name': 'punctuation.definition.entity.tss'
+                  'end': '\\]'
+                  'endCaptures':
+                    '0':
+                      'name': 'punctuation.definition.entity.tss'
+                  'patterns': [
+                      {
+                          'include': '#property-values'
+                      }
+                  ]
+              }
+              # Attribute
+              {
+                'captures':
+                  '1':
+                    'name': 'punctuation.definition.entity.tss'
+                  '2':
+                    'name': 'entity.other.attribute-name.attribute.tss'
+                  '3':
+                    'name': 'punctuation.separator.operator.tss'
+                  '4':
+                    'name': 'string.unquoted.attribute-value.tss'
+                  '5':
+                    'name': 'string.quoted.double.attribute-value.tss'
+                  '6':
+                    'name': 'punctuation.definition.string.begin.tss'
+                  '7':
+                    'name': 'punctuation.definition.string.end.tss'
+                  '8':
+                    'name': 'punctuation.definition.entity.tss'
+                'match': '(?i)(\\[)\\s*(-?[_a-z\\\\[[:^ascii:]]][_a-z0-9\\-\\\\[[:^ascii:]]]*)(?:\\s*([~|^$*]?=)\\s*(?:(-?[_a-z\\\\[[:^ascii:]]][_a-z0-9\\-\\\\[[:^ascii:]]]*)|((?>([\'"])(?:[^\\\\]|\\\\.)*?(\\6)))))?\\s*(\\])'
+                'name': 'meta.attribute-selector.tss'
+              }
+        ]
+    'property-values':
+        'patterns': [
+          {
+            'include': '#string-double'
+          }
+          {
+            'include': '#string-single'
+          }
+          {
+              'include': '#operators'
+          }
+          {
+              'include': '#method_calls'
+          }
+          {
+              'include': '#function_calls'
+          }
+          {
+              'include': '#objects'
+          }
+          {
+              'include': '#properties'
+          }
+          {
+              'include': '#number'
+          }
+          {
+              'include': '#boolean'
+          }
+          {
+            # Constant
+            'match': '\\b([a-zA-Z0-9_]+)\\b'
+            'name': 'support.constant.property-value.tss'
+          }
+        ]
+    'rule-list':
+        'begin': '\\{'
+        'beginCaptures':
+          '0':
+            'name': 'punctuation.section.property-list.begin.tss'
+        'end': '(\\})|(?<=\\})'
+        'endCaptures':
+          '0':
+            'name': 'punctuation.section.property-list.end.tss'
+        'name': 'meta.property-list.tss'
+        'patterns': [
+          {
+            'include': '#comment-block'
+          }
+          {
+            'include': '#comment-line'
+          }
+          {
+            'begin': '(:)\\s*'
+            'beginCaptures':
+              '1':
+                'name': 'punctuation.separator.key-value.tss'
+            'end': '\\s*(;)|(\\})'
+            'endCaptures':
+              '1':
+                'name': 'punctuation.terminator.rule.tss'
+              '2':
+                'name': 'punctuation.section.property-list.end.tss'
+            'name': 'meta.property-value.tss'
+            'patterns': [
+              {
+                'include': '#comment-block'
+              }
+              {
+                'include': '#comment-line'
+              }
+              {
+                'include': '#property-values'
+              }
+            ]
+          }
+        ]
+    'operators':
+        'patterns': [
+          {
+            'match': '%=|\\+=|-=|\\*=|(?<!\\()/='
+            'name': 'keyword.operator.assignment.compound.tss'
+          }
+          {
+            'match': '&=|\\^=|<<=|>>=|>>>=|\\|='
+            'name': 'keyword.operator.assignment.compound.bitwise.tss'
+          }
+          {
+            'match': '!==|!=|<=|>=|===|==|<|>'
+            'name': 'keyword.operator.comparison.tss'
+          }
+          {
+            'match': '&&|!|\\|\\|'
+            'name': 'keyword.operator.logical.tss'
+          }
+          {
+            'match': '&|\\||\\^|~'
+            'name': 'keyword.operator.bitwise.tss'
+          }
+          {
+            'match': '\\?|:'
+            'name': 'keyword.operator.tss'
+          }
+          {
+            'match': '='
+            'name': 'keyword.operator.assignment.tss'
+          }
+          {
+            'match': '--'
+            'name': 'keyword.operator.decrement.tss'
+          }
+          {
+            'match': '\\+\\+'
+            'name': 'keyword.operator.increment.tss'
+          }
+          {
+            'match': '%|\\*|/|-|\\+'
+            'name': 'keyword.operator.tss'
+          }
+        ]
+    'arguments':
+        'patterns': [
+          {
+            'begin': '\\('
+            'beginCaptures':
+              '0':
+                'name': 'punctuation.definition.arguments.begin.bracket.round.js'
+            'end': '\\)'
+            'endCaptures':
+              '0':
+                'name': 'punctuation.definition.arguments.end.bracket.round.js'
+            'name': 'meta.arguments.js'
+            'patterns': [
+              {
+                  'include': '#property-values'
+              }
+            ]
+          }
+        ]
+      'method_calls':
+        'patterns': [
+          {
+            # .methodCall(arg1, "arg2", [...])
+            'begin': '(\\.)\\s*([\\w$]+)\\s*(?=\\()'
+            'beginCaptures':
+              '1':
+                'name': 'meta.delimiter.method.period.js'
+              '2':
+                'patterns': [
+                  {
+                    'match': "[a-zA-Z_$][\\w$]*"
+                    'name': 'entity.name.function.js'
+                  }
+                  {
+                    'match': '\\d[\\w$]*'
+                    'name': 'invalid.illegal.identifier.js'
+                  }
+                ]
+            'end': '(?<=\\))'
+            'name': 'meta.method-call.js'
+            'patterns': [
+              {
+                'include': '#arguments'
+              }
+            ]
+          }
+        ]
+      'function_calls':
+        'patterns': [
+          {
+            # functionCall(arg1, "arg2", [...])
+            'begin': '([\\w$]+)\\s*(?=\\()'
+            'beginCaptures':
+              '1':
+                'patterns': [
+                  {
+                    'match': "[a-zA-Z_$][\\w$]*"
+                    'name': 'entity.name.function.js'
+                  }
+                  {
+                    'match': '\\d[\\w$]*'
+                    'name': 'invalid.illegal.identifier.js'
+                  }
+                ]
+            'end': '(?<=\\))'
+            'name': 'meta.function-call.js'
+            'patterns': [
+              {
+                'include': '#arguments'
+              }
+            ]
+          }
+        ]
+      'objects':
+        'patterns': [
+          {
+            # OBJ in OBJ.prop, OBJ.methodCall()
+            'match': '[A-Z][A-Z0-9_$]*(?=\\s*\\.\\s*[a-zA-Z_$]\\w*)'
+            'name': 'constant.other.object.js'
+          }
+          {
+            # obj in obj.prop, obj.methodCall()
+            'match': '[a-zA-Z_$][\\w$]*(?=\\s*\\.\\s*[a-zA-Z_$]\\w*)'
+            'name': 'variable.other.object.js'
+          }
+        ]
+      'properties':
+        'patterns': [
+          {
+            # PROP1 in obj.PROP1.prop2, func().PROP1.prop2
+            'match': '(\\.)\\s*([A-Z][A-Z0-9_$]*\\b\\$*)(?=\\s*\\.\\s*[a-zA-Z_$]\\w*)'
+            'captures':
+              '1':
+                'name': 'meta.delimiter.property.period.js'
+              '2':
+                'name': 'constant.other.object.property.js'
+          }
+          {
+            # prop1 in obj.prop1.prop2, func().prop1.prop2
+            'match': '(\\.)\\s*(\\$*[a-zA-Z_$][\\w$]*)(?=\\s*\\.\\s*[a-zA-Z_$]\\w*)'
+            'captures':
+              '1':
+                'name': 'meta.delimiter.property.period.js'
+              '2':
+                'name': 'variable.other.object.property.js'
+          }
+          {
+            # PROP in obj.PROP, func().PROP
+            'match': '(\\.)\\s*([A-Z][A-Z0-9_$]*\\b\\$*)'
+            'captures':
+              '1':
+                'name': 'meta.delimiter.property.period.js'
+              '2':
+                'name': 'constant.other.property.js'
+          }
+          {
+            # prop in obj.prop, func().prop
+            'match': '(\\.)\\s*(\\$*[a-zA-Z_$][\\w$]*)'
+            'captures':
+              '1':
+                'name': 'meta.delimiter.property.period.js'
+              '2':
+                'name': 'variable.other.property.js'
+          }
+          {
+            # 123illegal in obj.123illegal, func().123illegal
+            'match': '(\\.)\\s*([0-9][\\w$]*)'
+            'captures':
+              '1':
+                'name': 'meta.delimiter.property.period.js'
+              '2':
+                'name': 'invalid.illegal.identifier.js'
+          }
+        ]
+      'boolean':
+        'match': '(?<!\\.)\\b(true|false)(?!\\s*:)\\b|(?<=\\?)(?:\\s*)(true|false)(?=\\s*:)'
+        'captures':
+          '1':
+            'name': 'constant.language.boolean.$1.js'
+          '2':
+            'name': 'constant.language.boolean.$2.js'
+      'number':
+        'match': '(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))'
+        'name': 'constant.numeric.tss'

@@ -1,0 +1,17 @@
+{
+  "name": "language-tss",
+  "version": "0.0.0",
+  "description": "TSS language support in Atom for Transphporm",
+  "engines": {
+    "atom": "*",
+    "node": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/solleer/language-tss.git"
+  },
+  "bugs": {
+    "url": "https://github.com/solleer/language-tss/issues"
+  },
+  "license": "MIT"
+}
